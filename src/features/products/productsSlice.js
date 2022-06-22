@@ -1,74 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { CATEGORIES } from '../categories/categoriesSlice';
+import baldes from './baldes';
+import bebidas from './bebidas';
+import cerveja from './cerveja';
+import copos from './copos';
+import comida from './comida';
+import shots from './shots';
 
 const initialState = {
   products: 
     {
-      [CATEGORIES.cerveja]: [
-        {
-          id: "fino",
-          title: "Fino",
-          price: 150
-        },
-      ],
-      [CATEGORIES.baldes]: [
-        {
-          id: "balde-vodka",
-          title: "Vodka",
-          price: 450
-        },
-        {
-          id: "balde-whisky",
-          title: "Whisky",
-          price: 500
-        },
-        {
-          id: "balde-safari",
-          title: "Safari",
-          price: 500
-        },
-        {
-          id: "balde-beirao",
-          title: "Beirao",
-          price: 500
-        },
-        {
-          id: "balde-gin",
-          title: "Gin",
-          price: 500
-        }
-      ],
-      [CATEGORIES.shots]: [
-        {
-          id: "shot-casa",
-          title: "Shot da Casa",
-          price: 50
-        },
-        {
-          id: "shot-ana",
-          title: "Shot da Ana",
-          price: 50
-        },
-        {
-          id: "shot-absinto",
-          title: "Shot de Absinto",
-          price: 150
-        },
-      ],
-      [CATEGORIES.bebidas]: [],
-      [CATEGORIES.comida]: [
-        {
-          id: "cachorro",
-          title: "Cachorro",
-          price: 300
-        },
-        {
-          id: "bifana",
-          title: "Bifana",
-          price: 250
-        },   
-      ]
+      [CATEGORIES.cerveja]: cerveja,
+      [CATEGORIES.baldes]: baldes,
+      [CATEGORIES.shots]: shots,
+      [CATEGORIES.copos]: copos,
+      [CATEGORIES.bebidas]: bebidas,
+      [CATEGORIES.comida]: comida,
     },
 };
 
@@ -79,13 +27,28 @@ export const productsSlice = createSlice({
   reducers: {}
 });
 
-export const {} = productsSlice.actions;
-
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const getProductsByCategory = (state, category) =>  {
-  return state.products.products[category];
+  const products = state.products.products[category];
+
+  if (products) {
+    const sortedProducts = [...products].sort((a, b) => {
+      if (a.menuTitle > b.menuTitle) {
+        return 1;
+      }
+      if (a.menuTitle < b.menuTitle) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
+
+    return sortedProducts;
+  }
+
+  return products;
 };
 
 export default productsSlice.reducer;

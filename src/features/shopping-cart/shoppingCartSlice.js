@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { CATEGORIES } from '../categories/categoriesSlice';
-
 const initialState = {
   items: {},
   total: 0

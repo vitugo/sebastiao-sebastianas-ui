@@ -33,7 +33,7 @@ const Products = () => {
               onClick={() => dispatch(addItemToCart(product))}
             >
               <div className="h-vw font-bold text-4xl text-center align-middle">
-                {product.title}
+                {product.menuTitle || product.title}
               </div>
               <div className="h-vw font-bold text-3xl text-center align-middle">
                 {printEuro(product.price)}
