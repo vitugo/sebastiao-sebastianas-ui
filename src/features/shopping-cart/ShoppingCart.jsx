@@ -2,25 +2,16 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getItemsFromCart,
-  getTotalCost,
   removeItemFromCart,
-  resetShoppingCart,
 } from "./shoppingCartSlice";
 import { printEuro } from "../../utils/currency.utils";
-import axios from "axios";
 
-const client = axios.create({
-  baseURL: "http://localhost:3001",
-  headers: { "Content-Type": "application/json", Accept: "application/json" },
-  timeout: 10000,
-});
+import ShoppingCartHeader from "./ShoppingCartHeader";
+import ShoppingCartFooter from "./ShoppingCartFooter";
 
 const ShoppingCart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector(getItemsFromCart);
-  const totalCost = useSelector(getTotalCost);
-
-  console.log("ShoppingCart", { cartItems });
 
   if (!cartItems) {
     return <></>;
@@ -29,7 +20,9 @@ const ShoppingCart = () => {
   return (
     <div>
       <div className="flex flex-col p-4 h-screen w-full">
-        <div className="mb-auto h-full w-full">
+        <ShoppingCartHeader />
+
+        <div className="mb-auto h-full w-full overflow-auto">
           {Object.entries(cartItems).map(([itemId, item], index) => (
             <div
               className={`text-2xl ${
@@ -54,49 +47,7 @@ const ShoppingCart = () => {
           ))}
         </div>
 
-        <footer>
-          <div className="grid grid-cols-2 text-3xl">
-            <div className="col-auto truncate">Total</div>
-            <div className="col-auto justify-self-end">
-              {printEuro(totalCost)}
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="col-span-1">
-              <button
-                className="w-full bg-red-400 rounded-md h-20 text-center align-middle active:bg-red-600"
-                onClick={() => dispatch(resetShoppingCart())}
-              >
-                <div className="h-vw font-bold text-2xl text-center align-middle">
-                  Limpar
-                </div>
-              </button>
-            </div>
-            <div className="col-span-1">
-              <button
-                className="w-full bg-blue-400 rounded-md h-20 text-center align-middle active:bg-blue-600"
-                onClick={() => client.post("/printer/cash-drawer/open").then().catch()}
-              >
-                <div className="h-vw font-bold text-2xl text-center align-middle">
-                  Abrir Gaveta
-                </div>
-              </button>
-            </div>
-          </div>
-          <button
-            className="mt-2 w-full bg-green-400 rounded-md h-20 text-center align-middle active:bg-green-600"
-            onClick={() =>
-              client
-                .post("/printer/print", { data: { items: cartItems } })
-                .then(() => dispatch(resetShoppingCart()))
-                .catch((err) => console.log({ err }))
-            }
-          >
-            <div className="h-vw font-bold text-3xl text-center align-middle">
-              Imprimir
-            </div>
-          </button>
-        </footer>
+        <ShoppingCartFooter />
       </div>
     </div>
   );

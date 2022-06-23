@@ -11,13 +11,10 @@ const Products = () => {
   const dispatch = useDispatch();
 
   const selectedCategory = useSelector(getSelectedCategory);
-  console.log({ selectedCategory });
 
   const products = useSelector((state) =>
     getProductsByCategory(state, selectedCategory.id)
   );
-
-  console.log({ products });
 
   if (!products) {
     return <></>;
